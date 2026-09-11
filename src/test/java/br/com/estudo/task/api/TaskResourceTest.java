@@ -1,0 +1,77 @@
+package br.com.estudo.task.api;
+
+import br.com.estudo.task.service.TaskNotFoundException;
+import br.com.estudo.task.service.TaskService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+
+@QuarkusTest
+class TaskResourceTest {
+    @InjectMock
+    TaskService service;
+
+    @Test
+    void shouldReturnAllTasks() {
+        when(service.findAll()).thenReturn(List.of(new TaskResponse(1L, "Quarkus", "API", false)));
+
+        given().when().get("/tasks")
+                .then().statusCode(200).body("", hasSize(1)).body("[0].title", equalTo("Quarkus"));
+    }
+
+    @Test
+    void shouldReturnOneTask() {
+        when(service.findById(1L)).thenReturn(new TaskResponse(1L, "Java 21", "Records", true));
+
+        given().when().get("/tasks/1")
+                .then().statusCode(200).body("completed", equalTo(true));
+    }
+
+    @Test
+    void shouldCreateTask() {
+        when(service.create(any())).thenReturn(new TaskResponse(10L, "Docker", "Imagem", false));
+
+        given().contentType("application/json")
+                .body("{\"title\":\"Docker\",\"description\":\"Imagem\",\"completed\":false}")
+                .when().post("/tasks")
+                .then().statusCode(201).header("Location", endsWith("/tasks/10"))
+                .body("id", equalTo(10));
+    }
+
+    @Test
+    void shouldUpdateTask() {
+        when(service.update(eq(1L), any())).thenReturn(new TaskResponse(1L, "CI", "Ações", true));
+
+        given().contentType("application/json")
+                .body("{\"title\":\"CI\",\"description\":\"Ações\",\"completed\":true}")
+                .when().put("/tasks/1")
+                .then().statusCode(200).body("title", equalTo("CI"));
+    }
+
+    @Test
+    void shouldDeleteTask() {
+        doNothing().when(service).delete(1L);
+
+        given().when().delete("/tasks/1").then().statusCode(204);
+    }
+
+    @Test
+    void shouldReturn404ForMissingTask() {
+        doThrow(new TaskNotFoundException(99L)).when(service).findById(99L);
+
+        given().when().get("/tasks/99")
+                .then().statusCode(404).body("code", equalTo("NOT_FOUND"));
+    }
+}

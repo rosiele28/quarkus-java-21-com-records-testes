@@ -1,0 +1,11 @@
+target/
+work/
+
+# Ferramentas locais do projeto
+.tools/
+
+# Backup local do Git antigo
+.git-backup/
+
+# Backup local do Git antigo
+.git-clean-backup/
