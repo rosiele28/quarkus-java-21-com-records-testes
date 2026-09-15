@@ -1,7 +1,7 @@
-package br.com.estudo.task.api;
+package br.com.estudo.tarefa.api;
 
-import br.com.estudo.task.service.TaskNotFoundException;
-import br.com.estudo.task.service.TaskService;
+import br.com.estudo.tarefa.servico.TarefaNaoEncontradaException;
+import br.com.estudo.tarefa.servico.ServicoTarefa;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.junit.jupiter.api.Test;
@@ -19,29 +19,29 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class TaskResourceTest {
+class RecursoTarefaTest {
     @InjectMock
-    TaskService service;
+    ServicoTarefa servico;
 
     @Test
-    void shouldReturnAllTasks() {
-        when(service.findAll()).thenReturn(List.of(new TaskResponse(1L, "Quarkus", "API", false)));
+    void deveRetornarTodasAsTarefas() {
+        when(servico.listarTodas()).thenReturn(List.of(new RespostaTarefa(1L, "Quarkus", "API", false)));
 
         given().when().get("/tasks")
                 .then().statusCode(200).body("", hasSize(1)).body("[0].title", equalTo("Quarkus"));
     }
 
     @Test
-    void shouldReturnOneTask() {
-        when(service.findById(1L)).thenReturn(new TaskResponse(1L, "Java 21", "Records", true));
+    void deveRetornarUmaTarefa() {
+        when(servico.buscarPorId(1L)).thenReturn(new RespostaTarefa(1L, "Java 21", "Records", true));
 
         given().when().get("/tasks/1")
                 .then().statusCode(200).body("completed", equalTo(true));
     }
 
     @Test
-    void shouldCreateTask() {
-        when(service.create(any())).thenReturn(new TaskResponse(10L, "Docker", "Imagem", false));
+    void deveCriarTarefa() {
+        when(servico.criar(any())).thenReturn(new RespostaTarefa(10L, "Docker", "Imagem", false));
 
         given().contentType("application/json")
                 .body("{\"title\":\"Docker\",\"description\":\"Imagem\",\"completed\":false}")
@@ -51,8 +51,8 @@ class TaskResourceTest {
     }
 
     @Test
-    void shouldUpdateTask() {
-        when(service.update(eq(1L), any())).thenReturn(new TaskResponse(1L, "CI", "Ações", true));
+    void deveAtualizarTarefa() {
+        when(servico.atualizar(eq(1L), any())).thenReturn(new RespostaTarefa(1L, "CI", "Ações", true));
 
         given().contentType("application/json")
                 .body("{\"title\":\"CI\",\"description\":\"Ações\",\"completed\":true}")
@@ -61,15 +61,15 @@ class TaskResourceTest {
     }
 
     @Test
-    void shouldDeleteTask() {
-        doNothing().when(service).delete(1L);
+    void deveExcluirTarefa() {
+        doNothing().when(servico).excluir(1L);
 
         given().when().delete("/tasks/1").then().statusCode(204);
     }
 
     @Test
-    void shouldReturn404ForMissingTask() {
-        doThrow(new TaskNotFoundException(99L)).when(service).findById(99L);
+    void deveRetornar404ParaTarefaInexistente() {
+        doThrow(new TarefaNaoEncontradaException(99L)).when(servico).buscarPorId(99L);
 
         given().when().get("/tasks/99")
                 .then().statusCode(404).body("code", equalTo("NOT_FOUND"));
