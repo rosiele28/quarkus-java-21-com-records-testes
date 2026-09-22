@@ -4,14 +4,14 @@
     {
       "label": "Quarkus: iniciar em desenvolvimento",
       "type": "shell",
-      "command": "JAVA_HOME=\"${workspaceFolder}/.tools/jdk-21.0.12.1+1\" \"${workspaceFolder}/.tools/apache-maven-3.9.16/bin/mvn\" quarkus:dev",
+      "command": "JAVA_HOME=\"/usr/lib/jvm/java-21-openjdk-amd64\" \"${workspaceFolder}/.tools/apache-maven-3.9.16/bin/mvn\" quarkus:dev",
       "isBackground": true,
       "problemMatcher": []
     },
     {
       "label": "Qualidade: testes e cobertura",
       "type": "shell",
-      "command": "JAVA_HOME=\"${workspaceFolder}/.tools/jdk-21.0.12.1+1\" \"${workspaceFolder}/.tools/apache-maven-3.9.16/bin/mvn\" verify",
+      "command": "JAVA_HOME=\"/usr/lib/jvm/java-21-openjdk-amd64\" \"${workspaceFolder}/.tools/apache-maven-3.9.16/bin/mvn\" verify",
       "group": {
         "kind": "test",
         "isDefault": true

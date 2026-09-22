@@ -5,8 +5,8 @@ services:
       POSTGRES_DB: tasks
       POSTGRES_USER: task_user
       POSTGRES_PASSWORD: task_password
-    ports:
-      - "5432:5432"
+    # O PostgreSQL é acessado apenas pela API na rede interna do Docker.
+    # Sem expor 5432 no host, evitamos conflito com bancos já instalados.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U task_user -d tasks"]
       interval: 5s

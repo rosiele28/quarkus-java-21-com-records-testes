@@ -2,16 +2,16 @@
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-21",
-      "path": "/home/rsjesus1/Documents/Codex/2026-09-10/quarkus-java-21-com-records-testes/.tools/jdk-21.0.12.1+1",
+      "path": "/usr/lib/jvm/java-21-openjdk-amd64",
       "default": true
     }
   ],
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "automatic",
   "terminal.integrated.env.linux": {
-    "JAVA_HOME": "/home/rsjesus1/Documents/Codex/2026-09-10/quarkus-java-21-com-records-testes/.tools/jdk-21.0.12.1+1",
+    "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk-amd64",
     "MAVEN_HOME": "/home/rsjesus1/Documents/Codex/2026-09-10/quarkus-java-21-com-records-testes/.tools/apache-maven-3.9.16",
-    "PATH": "/home/rsjesus1/Documents/Codex/2026-09-10/quarkus-java-21-com-records-testes/.tools/jdk-21.0.12.1+1/bin:/home/rsjesus1/Documents/Codex/2026-09-10/quarkus-java-21-com-records-testes/.tools/apache-maven-3.9.16/bin:${env:PATH}"
+    "PATH": "/usr/lib/jvm/java-21-openjdk-amd64/bin:/home/rsjesus1/Documents/Codex/2026-09-10/quarkus-java-21-com-records-testes/.tools/apache-maven-3.9.16/bin:${env:PATH}"
   },
   "files.exclude": {
     "**/target": true
