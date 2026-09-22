@@ -1,6 +1,6 @@
 package br.com.estudo.tarefa.api;
 
-import br.com.estudo.tarefa.dominio.Tarefa;
+import br.com.estudo.tarefa.dominio.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Confere os contratos externos preservados durante a tradução do código. */
 @QuarkusTest
-class CompatibilidadeTarefaTest {
+class TaskCompatibilityTest {
     @Inject
     ObjectMapper conversorJson;
 
@@ -25,12 +25,12 @@ class CompatibilidadeTarefaTest {
     void devePreservarCamposJsonDaTarefa() throws Exception {
         var requisicao = conversorJson.readValue(
                 "{\"title\":\"Estudar\",\"description\":\"Java\",\"completed\":true}",
-                RequisicaoTarefa.class);
+                TaskRequest.class);
         assertEquals("Estudar", requisicao.titulo());
         assertEquals("Java", requisicao.descricao());
         assertTrue(requisicao.concluida());
 
-        var resposta = new RespostaTarefa(1L, requisicao.titulo(), requisicao.descricao(), requisicao.concluida());
+        var resposta = new TaskResponse(1L, requisicao.titulo(), requisicao.descricao(), requisicao.concluida());
         var json = conversorJson.readTree(conversorJson.writeValueAsString(resposta));
         assertEquals(conversorJson.readTree(
                 "{\"id\":1,\"title\":\"Estudar\",\"description\":\"Java\",\"completed\":true}"), json);
@@ -38,7 +38,7 @@ class CompatibilidadeTarefaTest {
 
     @Test
     void devePreservarCamposJsonDoErro() throws Exception {
-        var resposta = new MapeadorExcecaoApi.RespostaErro("NOT_FOUND", "Tarefa não encontrada");
+        var resposta = new ApiExceptionMapper.ErrorResponse("NOT_FOUND", "Tarefa não encontrada");
         var json = conversorJson.readTree(conversorJson.writeValueAsString(resposta));
         assertEquals(conversorJson.readTree(
                 "{\"code\":\"NOT_FOUND\",\"message\":\"Tarefa não encontrada\"}"), json);
@@ -47,7 +47,7 @@ class CompatibilidadeTarefaTest {
     @Test
     @TestTransaction
     void devePreservarTabelaColunasENomeDaEntidade() {
-        var tarefa = new Tarefa();
+        var tarefa = new Task();
         tarefa.titulo = "Conferir persistência";
         tarefa.descricao = "Manter o banco compatível";
         tarefa.concluida = false;
@@ -62,7 +62,7 @@ class CompatibilidadeTarefaTest {
         assertEquals(tarefa.descricao, registro[1]);
         assertFalse((Boolean) registro[2]);
         var encontrada = gerenciadorEntidades.createQuery(
-                "select t from Task t where t.id = :id", Tarefa.class)
+                "select t from Task t where t.id = :id", Task.class)
                 .setParameter("id", tarefa.id).getSingleResult();
         assertEquals(tarefa.titulo, encontrada.titulo);
     }

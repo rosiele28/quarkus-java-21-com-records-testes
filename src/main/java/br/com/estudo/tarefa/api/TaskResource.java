@@ -1,6 +1,6 @@
 package br.com.estudo.tarefa.api;
 
-import br.com.estudo.tarefa.servico.ServicoTarefa;
+import br.com.estudo.tarefa.servico.TaskService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
@@ -17,30 +17,30 @@ import java.util.List;
 
 @Path("/tasks")
 @Produces(MediaType.APPLICATION_JSON)
-public class RecursoTarefa {
+public class TaskResource {
     @Inject
-    ServicoTarefa servico;
+    TaskService servico;
 
     @GET
-    public List<RespostaTarefa> listarTodas() {
+    public List<TaskResponse> listarTodas() {
         return servico.listarTodas();
     }
 
     @GET
     @Path("/{id}")
-    public RespostaTarefa buscarPorId(@PathParam("id") Long id) {
+    public TaskResponse buscarPorId(@PathParam("id") Long id) {
         return servico.buscarPorId(id);
     }
 
     @POST
-    public Response criar(@Valid RequisicaoTarefa requisicao) {
-        RespostaTarefa criada = servico.criar(requisicao);
+    public Response criar(@Valid TaskRequest requisicao) {
+        TaskResponse criada = servico.criar(requisicao);
         return Response.created(URI.create("/tasks/" + criada.id())).entity(criada).build();
     }
 
     @PUT
     @Path("/{id}")
-    public RespostaTarefa atualizar(@PathParam("id") Long id, @Valid RequisicaoTarefa requisicao) {
+    public TaskResponse atualizar(@PathParam("id") Long id, @Valid TaskRequest requisicao) {
         return servico.atualizar(id, requisicao);
     }
 

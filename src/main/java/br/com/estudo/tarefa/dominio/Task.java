@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 
 @Entity(name = "Task")
 @Table(name = "tasks")
-public class Tarefa extends PanacheEntity {
+public class Task extends PanacheEntity {
     @Column(name = "title")
     public String titulo;
     @Column(name = "description")

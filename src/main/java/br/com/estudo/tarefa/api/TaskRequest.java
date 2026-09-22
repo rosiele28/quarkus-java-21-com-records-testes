@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record RequisicaoTarefa(
+public record TaskRequest(
         @NotBlank(message = "O título é obrigatório")
         @Size(max = 120, message = "O título deve ter no máximo 120 caracteres")
         @JsonProperty("title") String titulo,

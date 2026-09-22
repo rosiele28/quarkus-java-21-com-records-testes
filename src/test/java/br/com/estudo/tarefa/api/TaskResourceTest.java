@@ -1,7 +1,7 @@
 package br.com.estudo.tarefa.api;
 
-import br.com.estudo.tarefa.servico.TarefaNaoEncontradaException;
-import br.com.estudo.tarefa.servico.ServicoTarefa;
+import br.com.estudo.tarefa.servico.TaskNotFoundException;
+import br.com.estudo.tarefa.servico.TaskService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class RecursoTarefaTest {
+class TaskResourceTest {
     @InjectMock
-    ServicoTarefa servico;
+    TaskService servico;
 
     @Test
     void deveRetornarTodasAsTarefas() {
-        when(servico.listarTodas()).thenReturn(List.of(new RespostaTarefa(1L, "Quarkus", "API", false)));
+        when(servico.listarTodas()).thenReturn(List.of(new TaskResponse(1L, "Quarkus", "API", false)));
 
         given().when().get("/tasks")
                 .then().statusCode(200).body("", hasSize(1)).body("[0].title", equalTo("Quarkus"));
@@ -33,7 +33,7 @@ class RecursoTarefaTest {
 
     @Test
     void deveRetornarUmaTarefa() {
-        when(servico.buscarPorId(1L)).thenReturn(new RespostaTarefa(1L, "Java 21", "Records", true));
+        when(servico.buscarPorId(1L)).thenReturn(new TaskResponse(1L, "Java 21", "Records", true));
 
         given().when().get("/tasks/1")
                 .then().statusCode(200).body("completed", equalTo(true));
@@ -41,7 +41,7 @@ class RecursoTarefaTest {
 
     @Test
     void deveCriarTarefa() {
-        when(servico.criar(any())).thenReturn(new RespostaTarefa(10L, "Docker", "Imagem", false));
+        when(servico.criar(any())).thenReturn(new TaskResponse(10L, "Docker", "Imagem", false));
 
         given().contentType("application/json")
                 .body("{\"title\":\"Docker\",\"description\":\"Imagem\",\"completed\":false}")
@@ -52,7 +52,7 @@ class RecursoTarefaTest {
 
     @Test
     void deveAtualizarTarefa() {
-        when(servico.atualizar(eq(1L), any())).thenReturn(new RespostaTarefa(1L, "CI", "Ações", true));
+        when(servico.atualizar(eq(1L), any())).thenReturn(new TaskResponse(1L, "CI", "Ações", true));
 
         given().contentType("application/json")
                 .body("{\"title\":\"CI\",\"description\":\"Ações\",\"completed\":true}")
@@ -69,7 +69,7 @@ class RecursoTarefaTest {
 
     @Test
     void deveRetornar404ParaTarefaInexistente() {
-        doThrow(new TarefaNaoEncontradaException(99L)).when(servico).buscarPorId(99L);
+        doThrow(new TaskNotFoundException(99L)).when(servico).buscarPorId(99L);
 
         given().when().get("/tasks/99")
                 .then().statusCode(404).body("code", equalTo("NOT_FOUND"));
