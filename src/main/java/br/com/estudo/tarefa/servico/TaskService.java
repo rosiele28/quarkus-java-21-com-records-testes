@@ -18,6 +18,13 @@ public class TaskService {
         return repositorio.listAll().stream().map(this::converterParaResposta).toList();
     }
 
+    public  List<TaskResponse> listar(Boolean status) {
+        if (status == null){
+             return listarTodas();
+        }
+        return repositorio.list("concluida", status).stream().map(this::converterParaResposta).toList(); 
+    }
+
     public TaskResponse buscarPorId(Long id) {
         return converterParaResposta(buscarEntidade(id));
     }
@@ -37,12 +44,14 @@ public class TaskService {
         return converterParaResposta(tarefa);
     }
 
+
     @Transactional
     public void excluir(Long id) {
         if (!repositorio.deleteById(id)) {
             throw new TaskNotFoundException(id);
         }
     }
+
 
     private Task buscarEntidade(Long id) {
         return repositorio.findByIdOptional(id).orElseThrow(() -> new TaskNotFoundException(id));
@@ -57,4 +66,6 @@ public class TaskService {
     private TaskResponse converterParaResposta(Task tarefa) {
         return new TaskResponse(tarefa.id, tarefa.titulo, tarefa.descricao, tarefa.concluida);
     }
+
+
 }

@@ -25,7 +25,8 @@ class TaskResourceTest {
 
     @Test
     void deveRetornarTodasAsTarefas() {
-        when(servico.listarTodas()).thenReturn(List.of(new TaskResponse(1L, "Quarkus", "API", false)));
+        when(servico.listar(null))
+        .thenReturn(List.of(new TaskResponse(1L, "Quarkus", "API", false)));
 
         given().when().get("/tasks")
                 .then().statusCode(200).body("", hasSize(1)).body("[0].title", equalTo("Quarkus"));

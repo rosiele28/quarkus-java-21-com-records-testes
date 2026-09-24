@@ -10,7 +10,7 @@ Este roteiro continua a trilha inicial do README, concluída durante os estudos.
 
 Marque uma etapa somente depois de implementar, testar e revisar o PR.
 
-- [ ] 1. Filtro de tarefas concluídas e pendentes.
+- [ok] 1. Filtro de tarefas concluídas e pendentes.
 - [ ] 2. Paginação e ordenação.
 - [ ] 3. Validações e respostas de erro.
 - [ ] 4. Testes do fluxo completo com PostgreSQL.
@@ -66,11 +66,11 @@ O parâmetro novo `concluida` não renomeia o campo JSON existente `completed`. 
 
 ### Critérios de conclusão
 
-- [ ] Ausência de filtro continua retornando todas as tarefas.
-- [ ] `true` e `false` produzem resultados diferentes quando existem tarefas dos dois tipos.
-- [ ] Consulta vazia retorna uma lista vazia.
-- [ ] Testes verificam o encaminhamento do filtro e os resultados esperados.
-- [ ] Você consegue explicar por que usar `Boolean` nesse parâmetro.
+- [ok] Ausência de filtro continua retornando todas as tarefas.
+- [ok] `true` e `false` produzem resultados diferentes quando existem tarefas dos dois tipos.
+- [ok] Consulta vazia retorna uma lista vazia.
+- [ok] Testes verificam o encaminhamento do filtro e os resultados esperados.
+- [ok] Você consegue explicar por que usar `Boolean` nesse parâmetro.
 
 **Perguntas para revisão:** O que aconteceria com `boolean` quando o filtro não fosse informado? Por que um teste HTTP com serviço simulado não prova que a consulta ao banco está correta?
 
